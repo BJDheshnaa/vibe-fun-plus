@@ -70,26 +70,113 @@ function GameThumb({ id }: { id: string }) {
       </div>
     );
   }
+
   if (id === "minesweeper") {
     return (
       <div className="minimines" aria-hidden>
         {MINES_MINI.map((value, i) => (
-          <span key={i} className={value === "⚑" ? "flag" : value ? "open" : "closed"}>
+          <span
+            key={i}
+            className={value === "⚑" ? "flag" : value ? "open" : "closed"}
+          >
             {value}
           </span>
         ))}
       </div>
     );
   }
+
   if (id === "pacman") {
     return (
       <div className="minipacman" aria-hidden>
         {PACMAN_MINI.join("").split("").map((cell, i) => (
-          <span key={i} className={cell === "w" ? "wall" : cell === "p" ? "pac" : cell === "g" ? "ghost" : cell === "o" ? "power" : cell === "." ? "dot" : ""} />
+          <span
+            key={i}
+            className={
+              cell === "w"
+                ? "wall"
+                : cell === "p"
+                  ? "pac"
+                  : cell === "g"
+                    ? "ghost"
+                    : cell === "o"
+                      ? "power"
+                      : cell === "."
+                        ? "dot"
+                        : ""
+            }
+          />
         ))}
       </div>
     );
   }
+
+  // Connect 4 thumbnail: blue board with red and yellow discs.
+  if (id === "connect4") {
+    const redPositions = new Set([
+      "5-0",
+      "5-1",
+      "5-2",
+      "5-3",
+      "4-1",
+      "4-2",
+      "4-3",
+      "3-2",
+    ]);
+
+    const yellowPositions = new Set([
+      "5-5",
+      "4-4",
+      "4-5",
+      "3-4",
+    ]);
+
+    return (
+      <div
+        aria-hidden
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(7, minmax(0, 1fr))",
+          gap: 5,
+          padding: 12,
+          background: "#155eef",
+          borderRadius: 12,
+          width: "100%",
+          maxWidth: 280,
+          aspectRatio: "7 / 6",
+          boxSizing: "border-box",
+          margin: "0 auto",
+        }}
+      >
+        {Array.from({ length: 42 }, (_, i) => {
+          const row = Math.floor(i / 7);
+          const col = i % 7;
+          const position = `${row}-${col}`;
+
+          const isRed = redPositions.has(position);
+          const isYellow = yellowPositions.has(position);
+
+          return (
+            <div
+              key={i}
+              style={{
+                borderRadius: "50%",
+                background: isRed
+                  ? "#ff4b55"
+                  : isYellow
+                    ? "#ffd43b"
+                    : "#f4f7ff",
+                aspectRatio: "1",
+                minWidth: 0,
+              }}
+            />
+          );
+        })}
+      </div>
+    );
+  }
+
+  // Default thumbnail for Sudoku and any other uncustomized game.
   return (
     <div className="minisudoku" aria-hidden>
       {SUDOKU_MINI.split("").map((c, i) => (
@@ -110,19 +197,25 @@ export default function Home() {
         <div className="container hero-compact-inner">
           <div className="hero-copy">
             <span className="eyebrow">
-              <Sparkle style={{ width: 15, height: 15 }} /> The game catalog for AI assistants
+              <Sparkle style={{ width: 15, height: 15 }} /> The game catalog
+              for AI assistants
             </span>
+
             <h1>
-              Play here. Bring every game to your <span className="gradient-text">agent</span>.
+              Play here. Bring every game to{" "}
+              <span className="gradient-text">your agent</span>.
             </h1>
+
             <p className="lead">
               Pick a game below, or connect the whole library to ChatGPT and
               other MCP-compatible agents.
             </p>
+
             <div className="hero-cta">
               <Link className="btn btn-primary" href="/#games">
                 <Play /> Browse games
               </Link>
+
               <Link className="btn btn-outline" href="/#connect">
                 <Plug /> Connect an agent
               </Link>
@@ -137,10 +230,9 @@ export default function Home() {
           <div className="game-library-head">
             <div>
               <span className="eyebrow">The library</span>
-              <h2>
-                Four games. More on the way.
-              </h2>
+              <h2>Four games. More on the way.</h2>
             </div>
+
             <p>
               Hand-built, keyboard- and touch-friendly, and playable the moment
               you open them.
@@ -149,20 +241,35 @@ export default function Home() {
 
           <div className="game-grid">
             {games.map((g) => (
-              <article key={g.id} className="card card-hover game-card game-card-compact">
+              <article
+                key={g.id}
+                className="card card-hover game-card game-card-compact"
+              >
                 <div className={`game-thumb g${g.id}`}>
                   <GameThumb id={g.id} />
                 </div>
+
                 <div className="game-body">
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      gap: 10,
+                    }}
+                  >
                     <h3>{g.name}</h3>
-                    <span className="game-version">
-                      v{g.version}
-                    </span>
+
+                    <span className="game-version">v{g.version}</span>
                   </div>
+
                   <p className="game-description">{g.description}</p>
+
                   <div className="game-actions">
-                    <Link className="btn btn-primary btn-sm" href={`/play/${g.id}`}>
+                    <Link
+                      className="btn btn-primary btn-sm"
+                      href={`/play/${g.id}`}
+                    >
                       <Play /> Play
                     </Link>
                   </div>
@@ -170,21 +277,51 @@ export default function Home() {
               </article>
             ))}
 
-            <article className="card game-card" style={{ borderStyle: "dashed", opacity: 0.9 }}>
+            <article
+              className="card game-card"
+              style={{ borderStyle: "dashed", opacity: 0.9 }}
+            >
               <div className="game-thumb">
-                <div style={{ textAlign: "center", color: "var(--text-dim)" }}>
-                  <Bolt style={{ width: 30, height: 30, margin: "0 auto 10px" }} />
-                  <div style={{ fontFamily: "var(--font-head)", fontWeight: 600 }}>More coming</div>
+                <div
+                  style={{
+                    textAlign: "center",
+                    color: "var(--text-dim)",
+                  }}
+                >
+                  <Bolt
+                    style={{
+                      width: 30,
+                      height: 30,
+                      margin: "0 auto 10px",
+                    }}
+                  />
+
+                  <div
+                    style={{
+                      fontFamily: "var(--font-head)",
+                      fontWeight: 600,
+                    }}
+                  >
+                    More coming
+                  </div>
                 </div>
               </div>
+
               <div className="game-body">
-                <h3 style={{ color: "var(--text-muted)" }}>Your game here</h3>
+                <h3 style={{ color: "var(--text-muted)" }}>
+                  Your game here
+                </h3>
+
                 <p className="game-description">
-                  Every new game ships to all connected hosts at once. Want to add
-                  one? It takes a single file.
+                  Every new game ships to all connected hosts at once. Want to
+                  add one? It takes a single file.
                 </p>
+
                 <div className="game-actions">
-                  <Link className="btn btn-outline btn-sm" href="/#developers">
+                  <Link
+                    className="btn btn-outline btn-sm"
+                    href="/#developers"
+                  >
                     <Code /> How to add <ArrowRight />
                   </Link>
                 </div>
@@ -197,14 +334,24 @@ export default function Home() {
       {/* ---------- CONNECT ---------- */}
       <section className="section" id="connect">
         <div className="container">
-          <div className="center" style={{ maxWidth: 660, margin: "0 auto 40px" }}>
+          <div
+            className="center"
+            style={{ maxWidth: 660, margin: "0 auto 40px" }}
+          >
             <span className="eyebrow">Connect an agent</span>
-            <h2 style={{ fontSize: "clamp(28px,4vw,42px)", marginTop: 14 }}>
+
+            <h2
+              style={{
+                fontSize: "clamp(28px,4vw,42px)",
+                marginTop: 14,
+              }}
+            >
               Bring the whole library to your agent.
             </h2>
+
             <p className="lead" style={{ marginTop: 14 }}>
-              Add this MCP endpoint once. Your agent can discover every game now,
-              and new games appear automatically as the library grows.
+              Add this MCP endpoint once. Your agent can discover every game
+              now, and new games appear automatically as the library grows.
             </p>
           </div>
 
@@ -213,6 +360,7 @@ export default function Home() {
               <span className="badge">
                 <Server style={{ width: 15, height: 15 }} /> MCP endpoint
               </span>
+
               <code className="code" style={{ flex: 1, minWidth: 240 }}>
                 {endpoint}
               </code>
@@ -222,57 +370,103 @@ export default function Home() {
           <div className="grid-3">
             <article className="card host-card">
               <div className="host-head">
-                <span className="host-ico"><Sparkle /></span>
+                <span className="host-ico">
+                  <Sparkle />
+                </span>
+
                 <div>
-                  <strong style={{ fontFamily: "var(--font-head)" }}>ChatGPT</strong>
-                  <div className="host-status ok"><Check style={{ width: 15, height: 15 }} /> Plays now</div>
+                  <strong style={{ fontFamily: "var(--font-head)" }}>
+                    ChatGPT
+                  </strong>
+
+                  <div className="host-status ok">
+                    <Check style={{ width: 15, height: 15 }} /> Plays now
+                  </div>
                 </div>
               </div>
+
               <p>
-                Turn on Developer mode, add the endpoint as a connector, and the
-                games render and play right in the chat.
+                Turn on Developer mode, add the endpoint as a connector, and
+                the games render and play right in the chat.
               </p>
-              <a className="btn btn-outline btn-sm" href="https://help.openai.com/en/articles/12584461-developer-mode-and-mcp-apps-in-chatgpt" target="_blank" rel="noopener noreferrer">
+
+              <a
+                className="btn btn-outline btn-sm"
+                href="https://help.openai.com/en/articles/12584461-developer-mode-and-mcp-apps-in-chatgpt"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 Setup guide <ArrowRight />
               </a>
             </article>
 
             <article className="card host-card">
               <div className="host-head">
-                <span className="host-ico"><Bolt /></span>
+                <span className="host-ico">
+                  <Bolt />
+                </span>
+
                 <div>
-                  <strong style={{ fontFamily: "var(--font-head)" }}>Claude Desktop</strong>
-                  <div className="host-status soon"><Clock style={{ width: 15, height: 15 }} /> Connects · UI soon</div>
+                  <strong style={{ fontFamily: "var(--font-head)" }}>
+                    Claude Desktop
+                  </strong>
+
+                  <div className="host-status soon">
+                    <Clock style={{ width: 15, height: 15 }} /> Connects · UI
+                    soon
+                  </div>
                 </div>
               </div>
+
               <p>
-                Add it as a custom connector today to call the games. Interactive
-                rendering is on the way as MCP Apps support ships.
+                Add it as a custom connector today to call the games.
+                Interactive rendering is on the way as MCP Apps support ships.
               </p>
-              <a className="btn btn-ghost btn-sm" href={SITE.githubUrl} target="_blank" rel="noopener noreferrer">
+
+              <a
+                className="btn btn-ghost btn-sm"
+                href={SITE.githubUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 Read the docs <ArrowRight />
               </a>
             </article>
 
             <article className="card host-card">
               <div className="host-head">
-                <span className="host-ico"><Code /></span>
+                <span className="host-ico">
+                  <Code />
+                </span>
+
                 <div>
-                  <strong style={{ fontFamily: "var(--font-head)" }}>Any MCP client</strong>
+                  <strong style={{ fontFamily: "var(--font-head)" }}>
+                    Any MCP client
+                  </strong>
+
                   <div className="host-status no">Tools &amp; catalog</div>
                 </div>
               </div>
+
               <p>
                 Coding agents and other clients can list and call the games as
                 tools over Streamable HTTP or stdio.
               </p>
+
               <Link className="btn btn-ghost btn-sm" href="/#developers">
                 Developer setup <ArrowRight />
               </Link>
             </article>
           </div>
 
-          <p className="center" style={{ color: "var(--text-dim)", marginTop: 24, fontSize: 14 }}>
+          <p
+            className="center"
+            style={{
+              color: "var(--text-dim)",
+              marginTop: 24,
+              fontSize: 14,
+            }}
+          >
             No host handy?{" "}
             <Link href="/play/2048" style={{ color: "var(--brand-2)" }}>
               Play in your browser
@@ -283,36 +477,89 @@ export default function Home() {
       </section>
 
       {/* ---------- DEVELOPERS ---------- */}
-      <section className="section" id="developers" style={{ paddingTop: 20 }}>
+      <section
+        className="section"
+        id="developers"
+        style={{ paddingTop: 20 }}
+      >
         <div className="container">
-          <div className="grid-2" style={{ alignItems: "center", gap: 40 }}>
+          <div
+            className="grid-2"
+            style={{ alignItems: "center", gap: 40 }}
+          >
             <div>
               <span className="eyebrow">For developers</span>
-              <h2 style={{ fontSize: "clamp(26px,3.6vw,38px)", marginTop: 14 }}>
+
+              <h2
+                style={{
+                  fontSize: "clamp(26px,3.6vw,38px)",
+                  marginTop: 14,
+                }}
+              >
                 Ship a game in one file.
               </h2>
+
               <p className="lead" style={{ marginTop: 14 }}>
                 Adding a game is one self-contained HTML file and one catalog
-                entry. It goes live everywhere at once — no client to rebuild, no
-                store review.
+                entry. It goes live everywhere at once — no client to rebuild,
+                no store review.
               </p>
-              <ul style={{ listStyle: "none", padding: 0, margin: "22px 0 0", display: "grid", gap: 12 }}>
+
+              <ul
+                style={{
+                  listStyle: "none",
+                  padding: 0,
+                  margin: "22px 0 0",
+                  display: "grid",
+                  gap: 12,
+                }}
+              >
                 {[
                   "Built on the official MCP SDK + mcp-handler",
                   "Streamable HTTP and stdio transports",
                   "Standard MCP Apps contract — renders as-is in ChatGPT",
                   "Stateless and serverless — deploys to Vercel with zero config",
                 ].map((t) => (
-                  <li key={t} style={{ display: "flex", gap: 10, alignItems: "start", color: "var(--text-muted)" }}>
-                    <Check style={{ width: 20, height: 20, color: "var(--brand-2)", flex: "none", marginTop: 1 }} />
+                  <li
+                    key={t}
+                    style={{
+                      display: "flex",
+                      gap: 10,
+                      alignItems: "start",
+                      color: "var(--text-muted)",
+                    }}
+                  >
+                    <Check
+                      style={{
+                        width: 20,
+                        height: 20,
+                        color: "var(--brand-2)",
+                        flex: "none",
+                        marginTop: 1,
+                      }}
+                    />
                     {t}
                   </li>
                 ))}
               </ul>
-              <div style={{ display: "flex", gap: 12, marginTop: 26, flexWrap: "wrap" }}>
-                <a className="btn btn-primary" href={SITE.githubUrl} target="_blank" rel="noopener noreferrer">
+
+              <div
+                style={{
+                  display: "flex",
+                  gap: 12,
+                  marginTop: 26,
+                  flexWrap: "wrap",
+                }}
+              >
+                <a
+                  className="btn btn-primary"
+                  href={SITE.githubUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <Github /> View on GitHub
                 </a>
+
                 <a className="btn btn-outline" href={SITE.mcpPath}>
                   <Server /> MCP endpoint
                 </a>
@@ -320,13 +567,20 @@ export default function Home() {
             </div>
 
             <div className="card" style={{ padding: 20 }}>
-              <div className="mock-bar" style={{ padding: "2px 2px 12px" }}>
+              <div
+                className="mock-bar"
+                style={{ padding: "2px 2px 12px" }}
+              >
                 <span className="mock-dot" />
                 <span className="mock-dot" />
                 <span className="mock-dot" />
                 <span className="mock-title">lib/apps/index.ts</span>
               </div>
-              <pre className="code" style={{ margin: 0, lineHeight: 1.7 }}>
+
+              <pre
+                className="code"
+                style={{ margin: 0, lineHeight: 1.7 }}
+              >
 {`// 1. Build one self-contained HTML app
 export const htmlSnake = buildAppHtml({ /* ... */ });
 
@@ -345,21 +599,33 @@ export const APPS = [
       {/* ---------- FAQ ---------- */}
       <section className="section" id="faq">
         <div className="container">
-          <div className="center" style={{ maxWidth: 640, margin: "0 auto 40px" }}>
+          <div
+            className="center"
+            style={{ maxWidth: 640, margin: "0 auto 40px" }}
+          >
             <span className="eyebrow">FAQ</span>
-            <h2 style={{ fontSize: "clamp(26px,3.6vw,38px)", marginTop: 12 }}>
+
+            <h2
+              style={{
+                fontSize: "clamp(26px,3.6vw,38px)",
+                marginTop: 12,
+              }}
+            >
               Questions, answered.
             </h2>
           </div>
+
           <div className="faq" style={{ maxWidth: 780, margin: "0 auto" }}>
             {FAQS.map((f) => (
               <details key={f.q} className="faq-item">
                 <summary>
                   {f.q}
+
                   <span className="faq-chevron" aria-hidden>
                     +
                   </span>
                 </summary>
+
                 <p>{f.a}</p>
               </details>
             ))}
@@ -372,16 +638,36 @@ export const APPS = [
         <div className="container">
           <div className="cta-band">
             <span className="eyebrow">Ready when you are</span>
+
             <h2 style={{ marginTop: 12 }}>Start playing in seconds.</h2>
-            <p className="lead" style={{ margin: "14px auto 0", maxWidth: 520 }}>
-              Open a game in your browser now, or wire it into your assistant and
-              let the library come to you.
+
+            <p
+              className="lead"
+              style={{ margin: "14px auto 0", maxWidth: 520 }}
+            >
+              Open a game in your browser now, or wire it into your assistant
+              and let the library come to you.
             </p>
-            <div style={{ display: "flex", gap: 12, justifyContent: "center", marginTop: 26, flexWrap: "wrap" }}>
+
+            <div
+              style={{
+                display: "flex",
+                gap: 12,
+                justifyContent: "center",
+                marginTop: 26,
+                flexWrap: "wrap",
+              }}
+            >
               <Link className="btn btn-primary" href="/play/2048">
                 <Play /> Play now
               </Link>
-              <a className="btn btn-outline" href={SITE.githubUrl} target="_blank" rel="noopener noreferrer">
+
+              <a
+                className="btn btn-outline"
+                href={SITE.githubUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <Github /> Star on GitHub
               </a>
             </div>
