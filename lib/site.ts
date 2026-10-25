@@ -8,10 +8,11 @@ export const SITE = {
     "https://vibe-fun-plus.vercel.app",
   tagline: "Games for AI, on tap.",
   description:
-    "Vibe Fun Plus is an MCP Apps server featuring classic games and custom games like Connect 4. Connect once and discover the growing game library.",
+    "Vibe Fun Plus is an MCP Apps server featuring classic games and new additions. Connect once and explore the growing game library.",
   githubUrl: "https://github.com/BJDhesnaa/vibe-fun-plus",
   issuesUrl: "https://github.com/BJDhesnaa/vibe-fun-plus/issues",
-  securityUrl: "https://github.com/BJDhesnaa/vibe-fun-plus/security/advisories/new",
+  securityUrl:
+    "https://github.com/BJDhesnaa/vibe-fun-plus/security/advisories/new",
   contactPath: "/contact",
   mcpPath: "/api/mcp",
   nav: [
