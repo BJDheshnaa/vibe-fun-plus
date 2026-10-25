@@ -1,4 +1,4 @@
-```ts
+
 /** Central site configuration used across pages and SEO metadata. */
 export const SITE = {
   name: "Vibe Fun Plus",
@@ -25,4 +25,3 @@ export const SITE = {
 export function mcpEndpoint(): string {
   return `${SITE.url}${SITE.mcpPath}`;
 }
-```
